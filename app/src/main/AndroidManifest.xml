@@ -16,13 +16,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RouteMe">
-        <activity android:name=".MainActivityAuto"
-            android:label="@string/title_activity_maps">
+        <activity android:name=".MainActivityMap2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivityAuto"
+            android:label="@string/title_activity_maps">
+
+
         </activity>
 
         <meta-data

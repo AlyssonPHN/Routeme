@@ -43,8 +43,26 @@ dependencies {
 
     // AutoComplete Google Maps
     implementation 'com.google.android.libraries.places:places:2.4.0'
+
+
+    // GMS
+    //gmsImplementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+    // V3
+    implementation 'com.google.android.libraries.maps:maps:3.1.0-beta'
+    implementation 'com.google.android.gms:play-services-basement:17.5.0'
+    implementation 'com.google.android.gms:play-services-base:17.4.0'
+    implementation 'com.google.android.gms:play-services-gcm:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
+
+    // Below is used to run the easypermissions library to manage location permissions
+    // EasyPermissions is needed to help us request for permission to access location
+    implementation 'pub.devrel:easypermissions:3.0.0'
+
+
     // Teste
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
 }

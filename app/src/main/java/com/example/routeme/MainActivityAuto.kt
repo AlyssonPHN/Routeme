@@ -20,9 +20,9 @@ class MainActivityAuto : AppCompatActivity() {
         setContentView(R.layout.activity_main_auto)
 
         //
-        //if (!Places.isInitialized()) {
+        if (!Places.isInitialized()) {
             Places.initialize(applicationContext, getString(R.string.google_maps_key));
-        //}
+        }
         // Create a new Places client instance.
         val placesClient = Places.createClient(this)
 
@@ -32,13 +32,14 @@ class MainActivityAuto : AppCompatActivity() {
                     as AutocompleteSupportFragment
 
         autocompleteFragment.setTypeFilter(TypeFilter.ADDRESS);
+        //autocompleteFragment.setCountries()
 
         autocompleteFragment.setLocationBias(RectangularBounds.newInstance(
             LatLng(-33.880490, 151.184363),
             LatLng(-33.858754, 151.229596)
         ))
 
-        autocompleteFragment.setCountries("IN")
+        //autocompleteFragment.setCountries("IN")
 
         // Specify the types of place data to return.
         autocompleteFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME))

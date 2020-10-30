@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Route me</string>
     <string name="title_activity_maps">Map</string>
+
+    <!-- Permissions -->
+    <string name="permission_rationale_location">O acesso ao serviço de localização é necessário para mostrar sua localização atual no mapa.</string>
+    <string name="location_permission_denied">É necessário a permissão da localização.</string>
+    <string name="permission_required_toast">É necessário a permissão da localização para este app.</string>
 </resources>
