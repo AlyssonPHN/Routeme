@@ -19,6 +19,7 @@ class MainActivityAuto : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_auto)
 
+        //
         //if (!Places.isInitialized()) {
             Places.initialize(applicationContext, getString(R.string.google_maps_key));
         //}
