@@ -1,13 +1,12 @@
-package com.example.routeme
+package com.example.routeme.presentation
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.routeme.R
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.maps.*
 
