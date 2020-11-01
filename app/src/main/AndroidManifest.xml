@@ -30,7 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.MainActivityMap2" />
+        <activity android:name=".presentation.main.MapActivity" />
         <activity
             android:name=".presentation.MainActivityAuto"
             android:label="@string/title_activity_maps" />

@@ -6,14 +6,13 @@ import PermissionUtils.requestPermission
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.routeme.R
+import com.example.routeme.presentation.main.MapActivity
 import kotlinx.android.synthetic.main.activity_welcome.*
-import com.example.routeme.presentation.MainActivityMap2
-import com.example.routeme.presentation.MapsActivity
 
 class WelcomeActivity : AppCompatActivity() {
 
@@ -25,8 +24,8 @@ class WelcomeActivity : AppCompatActivity() {
 
         btnMap.setOnClickListener {
             // Ir para o Map
-            //val intent = Intent(this, MainActivityMap2::class.java)
-            val intent = Intent(this, MapsActivity::class.java)
+            val intent = Intent(this, MapActivity::class.java)
+            //val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent)
         }
     }
@@ -37,7 +36,7 @@ class WelcomeActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         // Quando a permissão foi concedida
-        if (requestCode != MainActivityMap2.LOCATION_PERMISSION_REQUEST_CODE) {
+        if (requestCode != MapActivity.LOCATION_PERMISSION_REQUEST_CODE) {
             return
         }
         // Quando a permissão foi negada
@@ -61,15 +60,18 @@ class WelcomeActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) return
-        // Permission to access the location is missing. Show rationale and request permission
-        requestPermission(
-            this, MainActivityMap2.LOCATION_PERMISSION_REQUEST_CODE,
-            Manifest.permission.ACCESS_FINE_LOCATION, true
-        )
-        requestPermission(
-            this, MainActivityMap2.LOCATION_PERMISSION_REQUEST_CODE,
-            Manifest.permission.ACCESS_COARSE_LOCATION, true
-        )
+        // Pedir permissão para acessar a localização
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                MapActivity.LOCATION_PERMISSION_REQUEST_CODE
+            )
+        } else {
+            requestPermission(
+                this, MapActivity.LOCATION_PERMISSION_REQUEST_CODE,
+                Manifest.permission.ACCESS_FINE_LOCATION, true
+            )
+        }
+
     }
 
     // Mostrar Permissão negada
