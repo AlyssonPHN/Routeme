@@ -23,8 +23,9 @@ class SplashActivity : AppCompatActivity() {
         viewModel.getStart()
 
         viewModel.startLiveData.observe(this, {
-                val intent = Intent(this, WelcomeActivity::class.java)
-                startActivity(intent)
+            val intent = Intent(this, WelcomeActivity::class.java)
+            startActivity(intent)
+            finish()
         })
     }
 }

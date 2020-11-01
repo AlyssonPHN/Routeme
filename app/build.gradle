@@ -71,6 +71,13 @@ dependencies {
     implementation 'com.google.android.gms:play-services-gcm:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.1.0'
 
+    // Java Client for Google Maps Services
+    implementation 'com.google.maps:google-maps-services:0.1.1'
+    implementation 'org.slf4j:slf4j-simple:1.7.25'
+
+    implementation 'com.google.maps.android:android-maps-utils:2.0.3'
+    implementation 'com.google.maps.android:maps-utils-ktx:2.2.0'
+
     // Below is used to run the easypermissions library to manage location permissions
     // EasyPermissions is needed to help us request for permission to access location
     implementation 'pub.devrel:easypermissions:3.0.0'

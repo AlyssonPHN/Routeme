@@ -8,10 +8,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.routeme.R
 import kotlinx.android.synthetic.main.activity_welcome.*
 import com.example.routeme.presentation.MainActivityMap2
+import com.example.routeme.presentation.MapsActivity
 
 class WelcomeActivity : AppCompatActivity() {
 
@@ -23,7 +25,8 @@ class WelcomeActivity : AppCompatActivity() {
 
         btnMap.setOnClickListener {
             // Ir para o Map
-            val intent = Intent(this, MainActivityMap2::class.java)
+            //val intent = Intent(this, MainActivityMap2::class.java)
+            val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent)
         }
     }
@@ -53,14 +56,20 @@ class WelcomeActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // Permission to access the location is missing. Show rationale and request permission
-            requestPermission(
-                this, MainActivityMap2.LOCATION_PERMISSION_REQUEST_CODE,
-                Manifest.permission.ACCESS_FINE_LOCATION, true
-            )
-        }
+            ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) return
+        // Permission to access the location is missing. Show rationale and request permission
+        requestPermission(
+            this, MainActivityMap2.LOCATION_PERMISSION_REQUEST_CODE,
+            Manifest.permission.ACCESS_FINE_LOCATION, true
+        )
+        requestPermission(
+            this, MainActivityMap2.LOCATION_PERMISSION_REQUEST_CODE,
+            Manifest.permission.ACCESS_COARSE_LOCATION, true
+        )
     }
 
     // Mostrar Permissão negada

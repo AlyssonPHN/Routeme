@@ -1,23 +1,23 @@
 package com.example.routeme.presentation
 
-import android.Manifest
-import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
-import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import com.example.routeme.R
-import com.google.android.gms.common.api.Status
-import com.google.android.gms.maps.*
-
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.RectangularBounds
-import com.google.android.libraries.places.api.model.TypeFilter
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.DirectionsApi
+import com.google.maps.DirectionsApiRequest
+import com.google.maps.GeoApiContext
+import com.google.maps.model.DirectionsRoute
+import com.google.maps.model.TravelMode
+import kotlinx.coroutines.*
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -30,105 +30,92 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        initializePlace()
         //pedirPermissionLocal()
 
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        pedirPermissionLocal()
 
-    }
+        val zaragoza = LatLng(41.648823, -0.889085)
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (PermissionUtils.isPermissionGranted(
-                permissions,
-                grantResults,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        ) {
-            // Enable the my location layer if the permission has been granted.
-            pedirPermissionLocal()
-        } else {
-            val teste = "dsds"
-            // Permission was denied. Display an error message
-            // ...
-        }
-    }
+        val barcelona = LatLng(41.385064, 2.173403)
+        mMap.addMarker(MarkerOptions().position(barcelona).title("Marker in Barcelona"))
 
-    fun irparaPosicao(latLng: LatLng) {
-        mMap.addMarker(MarkerOptions().position(latLng).title(""))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-    }
+        val madrid = LatLng(40.416775, -3.70379)
+        mMap.addMarker(MarkerOptions().position(madrid).title("Marker in Madrid"))
 
-    fun pedirPermissionLocal() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED
-        ) {
-            //if (mMap != null) {
-            mMap.isMyLocationEnabled = true
-            //}
-        } else {
-            // Permission to access the location is missing. Show rationale and request permission
-            PermissionUtils.requestPermission(
-                this, LOCATION_PERMISSION_REQUEST_CODE,
-                Manifest.permission.ACCESS_FINE_LOCATION, true
-            )
-        }
-    }
+        val context = GeoApiContext().setApiKey(getString(R.string.google_maps_key))
+        val paths: ArrayList<LatLng> = arrayListOf()
+        CoroutineScope(Dispatchers.Main).launch {
+            //withContext(Dispatchers.Default) {
 
-    fun initializePlace() {
-        //
-        if (!Places.isInitialized()) {
-            Places.initialize(applicationContext, getString(R.string.google_maps_key))
-        }
-        // Create a new Places client instance.
-        val placesClient = Places.createClient(this)
 
-        // Initialize the AutocompleteSupportFragment.
-        val autocompleteFragment =
-            supportFragmentManager.findFragmentById(R.id.autocomplete_fragment)
-                    as AutocompleteSupportFragment
+            suspend fun rodar() {
+                return withContext(Dispatchers.Default) {
+                    val apiRequest2: DirectionsApiRequest = DirectionsApi.newRequest(context)
+                        .origin("41.385064,2.173403")
+                        .destination("40.416775,-3.70379")
+                        .mode(TravelMode.DRIVING)
 
-        autocompleteFragment.setTypeFilter(TypeFilter.ADDRESS)
-        autocompleteFragment.setCountries("BR")
+                    //apiRequest2.await()
 
-        autocompleteFragment.setLocationBias(
-            RectangularBounds.newInstance(
-                LatLng(-33.880490, 151.184363),
-                LatLng(-33.858754, 151.229596)
-            )
-        )
+                    var latlongList: List<LatLng>? = null
 
-        // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(
-            listOf(
-                Place.Field.ID,
-                Place.Field.NAME,
-                Place.Field.LAT_LNG
-            )
-        )
 
-        // Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
-            override fun onPlaceSelected(place: Place) {
-                Log.i("tag", "Place: ${place.name}, ${place.id}")
-                irparaPosicao(place.latLng!!)
+                    try {
+                        val routes: Array<DirectionsRoute> = apiRequest2.await()
+
+                        for (route in routes) {
+                            if (route.legs != null) {
+                                for (i in route.legs.indices) {
+                                    val leg = route.legs[i]
+                                    if (leg.steps != null) {
+                                        for (j in leg.steps.indices) {
+                                            val step = leg.steps[j]
+
+                                            val points = step.polyline
+                                            if (points != null) {
+                                                //Decode polyline and add points to list of route coordinates
+                                                val coords = points.decodePath()
+                                                for (coord in coords) {
+                                                    //path.add(LatLng(coord.lat, coord.lng))
+                                                    paths.add(LatLng(coord.lat, coord.lng))
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        throw IllegalStateException(e)
+                    }
+
+
+                    //return points
+                }
+                //    }
+
+                //rodar()
+            }
+            async {
+                rodar()
+            }.await()
+
+            if (paths.size > 0) {
+
+                val opts: PolylineOptions =
+                    PolylineOptions().addAll(paths).color(Color.BLUE).width(5f)
+                mMap.addPolyline(opts)
             }
 
-            override fun onError(status: Status) {
-                Log.i("tag", "An error occurred: $status")
-            }
-        })
-    }
+            mMap.uiSettings.isZoomControlsEnabled = true
 
-    companion object {
-        const val LOCATION_PERMISSION_REQUEST_CODE = 100;
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zaragoza, 6f))
+        }
+        //mMap.uiSettings.isZoomControlsEnabled = true
+
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zaragoza, 6f))
     }
 }
