@@ -69,6 +69,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         startLocationUpdates()
         showPoint()
         showRoute()
+        showErrors()
     }
 
     // Inicializa suporte Place
@@ -129,6 +130,18 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             val bounds = viewModel.builder.build()
             // Zoom em todos os pontos
             map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+        })
+    }
+
+    // Mostrar erros
+    private fun showErrors(){
+        // Erro ao buscar rotas
+        viewModel.errorPolilyneLiveData.observe(this, {
+            Toast.makeText(this, getString(R.string.erro_get_rota), Toast.LENGTH_SHORT).show()
+        })
+        // Erro ao adicionar ponto no mapa.
+        viewModel.errorMarkerOptionsLiveData.observe(this, {
+            Toast.makeText(this, getString(R.string.erro_point_map), Toast.LENGTH_SHORT).show()
         })
     }
 

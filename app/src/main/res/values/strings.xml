@@ -7,6 +7,8 @@
     <string name="location_permission_denied">É necessário a permissão da localização.</string>
     <string name="permission_required_toast">É necessário a permissão da localização para este app.</string>
     <string name="erro_autocomplete">Erro ao localizar endereço.</string>
+    <string name="erro_get_rota">Erro a buscar rota</string>
+    <string name="erro_point_map">Erro ao adicionar ponto no mapa.</string>
     <string name="my_position">Minha posição.</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
     <!-- Strings used for fragments for navigation -->

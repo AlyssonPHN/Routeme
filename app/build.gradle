@@ -88,6 +88,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    //Teste coroutines
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.2"
+
     // Mockito
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation 'androidx.arch.core:core-testing:2.1.0'

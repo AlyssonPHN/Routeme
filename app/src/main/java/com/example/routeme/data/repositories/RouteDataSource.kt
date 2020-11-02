@@ -51,10 +51,11 @@ class RouteDataSource @Inject constructor() : RoutesRepository {
                         }
                     }
                 }
+                mapResultCallback(MapsResult.Success(paths))
             } catch (e: Exception) {
-                throw IllegalStateException(e)
+                mapResultCallback(MapsResult.ApiError(e))
             }
-            mapResultCallback(MapsResult.Success(paths))
+
         }
     }
 
