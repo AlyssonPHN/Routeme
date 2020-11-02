@@ -1,7 +1,9 @@
 package com.example.routeme.data.repositories
 
+import android.graphics.Color
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.DirectionsApi
 import com.google.maps.DirectionsApiRequest
 import com.google.maps.GeoApiContext
@@ -51,7 +53,14 @@ class RouteDataSource @Inject constructor() : RoutesRepository {
                         }
                     }
                 }
-                mapResultCallback(MapsResult.Success(paths))
+                //mapResultCallback(MapsResult.Success(paths))
+                if (paths.size > 0) {
+                    val opts: PolylineOptions =
+                        PolylineOptions().addAll(paths).color(Color.BLUE).width(5f)
+                    mapResultCallback(MapsResult.Success(opts))
+                } else {
+                    mapResultCallback(MapsResult.ApiError(Exception()))
+                }
             } catch (e: Exception) {
                 mapResultCallback(MapsResult.ApiError(e))
             }

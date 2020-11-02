@@ -31,8 +31,6 @@ class MapViewModel @ViewModelInject constructor(private val routeDataSource: Rou
 
     fun getPolylines(geoApiContext: GeoApiContext, origin: LatLng, destination: LatLng) {
         CoroutineScope(Dispatchers.Main).launch {
-            var paths: ArrayList<LatLng> = arrayListOf()
-            var erro: Exception? = null
             // Coroutines para retornar as latitudes da rota
             withContext(Dispatchers.Default) {
                 routeDataSource.getPathRoute(
@@ -44,26 +42,14 @@ class MapViewModel @ViewModelInject constructor(private val routeDataSource: Rou
                         is MapsResult.Success<*> -> {
                             @Suppress("UNCHECKED_CAST")
                             // Rota retornada
-                            paths = result.data as ArrayList<LatLng>
+                            polylinesLiveData.postValue(result.data as PolylineOptions)
                         }
                         // Erro ao retornar rota
                         is MapsResult.ApiError -> {
-                            erro = result.exception
+                            errorPolilyneLiveData.postValue(result.exception)
                         }
                     }
                 }
-            }
-            // Atualiza Livedata com as polylines
-            if (paths.size > 0) {
-                val opts: PolylineOptions =
-                    PolylineOptions().addAll(paths).color(Color.BLUE).width(5f)
-                polylinesLiveData.value = opts
-            } else {
-                errorPolilyneLiveData.value = Exception()
-            }
-            // Se tiver erro atualizar live data
-            if (erro != null){
-                errorPolilyneLiveData.value = erro
             }
         }
     }

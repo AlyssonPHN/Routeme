@@ -42,7 +42,7 @@ class MapViewModelTest {
     private lateinit var polylinesLiveDataObserver: Observer<PolylineOptions>
 
     @Mock
-    private lateinit var errorPolilyneLiveData: Observer<Exception>
+    private lateinit var errorPolilyneLiveDataObserver: Observer<Exception>
 
     @Mock
     private lateinit var markerOptionsLiveDataObserver: Observer<MarkerOptions>
@@ -125,9 +125,12 @@ class MapViewModelTest {
     @Test
     fun `when get polylines return sucess`() = runBlockingTest {
         // Arrange
+        // Origem e destino
         val orgin = LatLng(-7.2080833, -39.3141)
         val destination = LatLng(-7.208203699999999, -39.3139455)
 
+        //Rota retornada
+        //Route returned
         val out1 = LatLng(-7.2081100000000005, -39.3141)
         val out2 = LatLng(-7.20809, -39.31396)
         val paths = ArrayList<LatLng>()
@@ -137,7 +140,7 @@ class MapViewModelTest {
         val polylines: PolylineOptions =
             PolylineOptions().addAll(paths).color(Color.BLUE).width(5f)
 
-        val resultSucess = MockRouteDataSource(MapsResult.Success(paths))
+        val resultSucess = MockRouteDataSource(MapsResult.Success(polylines))
         viewModel = MapViewModel(resultSucess)
         viewModel.polylinesLiveData.observeForever(polylinesLiveDataObserver)
 
@@ -147,6 +150,34 @@ class MapViewModelTest {
 
         // Assert
         verify(polylinesLiveDataObserver).onChanged(polylines)
+    }
+
+    @Test
+    fun `when get polylines return erro`() = runBlockingTest {
+        // Arrange
+        // Origem e destino
+        val orgin = LatLng(-7.2080833, -39.3141)
+        val destination = LatLng(-7.208203699999999, -39.3139455)
+
+        //Rota retornada
+        //Route returned
+        val out1 = LatLng(-7.2081100000000005, -39.3141)
+        val out2 = LatLng(-7.20809, -39.31396)
+        val paths = ArrayList<LatLng>()
+        paths.add(out1)
+        paths.add(out2)
+
+        val exception = Exception()
+
+        val resultSucess = MockRouteDataSource(MapsResult.ApiError(exception))
+        viewModel = MapViewModel(resultSucess)
+        viewModel.errorPolilyneLiveData.observeForever(errorPolilyneLiveDataObserver)
+
+        // Act
+        viewModel.getPolylines(geoApicontext, orgin, destination)
+
+        // Assert
+        verify(errorPolilyneLiveDataObserver).onChanged(exception)
     }
 
     class MockRouteDataSource(private val result: MapsResult) : RoutesRepository {
