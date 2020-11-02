@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -43,11 +42,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
     private lateinit var locationCallback: LocationCallback
     private var myPostion: LatLng? = null
     private var geoApicontext: GeoApiContext? = null
-
+    // Responsável por pegar a localização atual
     private val fusedLocationClient by lazy {
         LocationServices.getFusedLocationProviderClient(this)
     }
-
+    // Para pegar a atualização atual
     private val locationRequest = LocationRequest.create().apply {
         interval = 10_000
         fastestInterval = 5_000
@@ -59,7 +58,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         setContentView(R.layout.activity_main_map2)
         initializePlace()
         viewModel = ViewModelProvider(this).get(MapViewModel::class.java)
-
+        //Inicializa o contexto do GeoApi
         geoApicontext = GeoApiContext().setApiKey(getString(R.string.google_maps_key))
 
 
@@ -109,7 +108,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             }
 
             override fun onError(status: Status) {
-                Log.i("tag", "An error occurred: $status")
+                Toast.makeText(applicationContext, getString(R.string.erro_autocomplete), Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -259,6 +258,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         }
     }
 
+    // Mostrar dialog pedindo a permissão novamente
     private fun showMissingPermissionError() {
         newInstance(true).show(supportFragmentManager, "dialog")
     }
@@ -268,7 +268,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
     }
 
     override fun onLocationChanged(p0: Location?) {
-        Toast.makeText(this, "minha posicao", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.my_position), Toast.LENGTH_SHORT).show()
     }
 
 }

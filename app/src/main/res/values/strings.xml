@@ -6,6 +6,8 @@
     <string name="permission_rationale_location">O acesso ao serviço de localização é necessário para mostrar sua localização atual no mapa.</string>
     <string name="location_permission_denied">É necessário a permissão da localização.</string>
     <string name="permission_required_toast">É necessário a permissão da localização para este app.</string>
+    <string name="erro_autocomplete">Erro ao localizar endereço.</string>
+    <string name="my_position">Minha posição.</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
