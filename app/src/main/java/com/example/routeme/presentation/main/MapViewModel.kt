@@ -69,7 +69,6 @@ class MapViewModel @ViewModelInject constructor(private val routeDataSource: Rou
     }
 
     fun createMarkerOption(latLng: LatLng, myPostionBoolean: Boolean) {
-//        val markerOptions = routeDataSource.createMarkerOption(latLng, myPostionBoolean)
         var markerOptions: MarkerOptions?
         routeDataSource.createMarkerOption(latLng, myPostionBoolean) {result: MapsResult ->
             when(result) {
